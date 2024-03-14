@@ -1,4 +1,4 @@
-FROM	debian:buster
+FROM	debian:bullseye
 
 RUN		apt update -y && apt upgrade -y \
 		&& apt install vim -y \
@@ -7,7 +7,7 @@ RUN		apt update -y && apt upgrade -y \
 		&& mkdir -p /etc/nginx/ssl \
 		&& apt install openssl -y
 
-RUN		openssl req -x509 -nodes -out /etc/nginx/ssl/acarlott.crt -keyout /etc/nginx/ssl/acarlott.key -subj "/C=FR/ST=RA/L=Lyon/O=42/OU=42/CN=acarlott.42.fr/UID=acarlott"
+RUN		openssl req -x509 -nodes -out /etc/nginx/ssl/acarlott.crt -keyout /etc/nginx/ssl/acarlott.key -subj "${CERTS_}"
 
 RUN		mkdir -p /var/run/nginx
 
