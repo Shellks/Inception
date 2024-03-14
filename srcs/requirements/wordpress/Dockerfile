@@ -27,6 +27,4 @@ RUN mkdir /run/php \
 
 ENTRYPOINT ["/auto_config.sh"]
 
-# EXPOSE 9000
-
 CMD ["php-fpm7.4", "-F"]
