@@ -1,0 +1,75 @@
+version: '3'
+
+services:
+
+  mariadb:
+    container_name: mariadb
+    networks:
+      - inception
+    build:
+      context: requirements/mariadb
+      args:
+        - MYSQL_DATABASE
+        - MYSQL_ROOT_PASSWORD
+        - MYSQL_USER
+        - MYSQL_PASSWORD
+    env_file: .env
+    volumes:
+      - mariadb:/var/lib/mysql
+    restart: unless-stopped
+    expose:
+      - "3306"
+
+  wordpress:
+    container_name: wordpress
+    networks:
+      - inception
+    depends_on:
+      - mariadb
+    build:
+      context: requirements/wordpress
+    env_file: .env
+    volumes:
+      - wordpress:/var/www/wordpress
+    restart: on-failure
+    expose:
+      - "9000"
+
+  nginx:
+    container_name: nginx
+    networks:
+      - inception
+    depends_on:
+      - wordpress
+    build:
+      context: requirements/nginx
+      args:
+        - CERTS_
+    env_file: .env
+    volumes:
+      - wordpress:/var/www/wordpress
+    restart: on-failure
+    ports:
+      - 443:443
+    expose:
+      - "443"
+
+volumes:
+
+  wordpress:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: '/home/acarlott/data/wordpress'
+
+  mariadb:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: '/home/acarlott/data/mariadb'
+
+networks:
+  inception:
+    driver: bridge
