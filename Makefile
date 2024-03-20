@@ -14,22 +14,26 @@ NAME = Inception
 
 SRCS = srcs/
 DOC_FILE = $(SRCS)docker-compose.yml
+MARIADB_VOL = ~/data/mariadb/
+WORDPRESS_VOL = ~/data/wordpress/
 
 all: $(NAME)
 
 $(NAME):
-	docker-compose -f srcs/docker-compose.yml up --build
+	docker compose -f $(DOC_FILE) up --build -d
 
 down:
-	docker-compose -f $(DOC_FILE) down
+	docker compose -f $(DOC_FILE) down
 
 clean:
-	docker-compose -f $(DOC_FILE) down --volumes --remove-orphans --rmi all
+	docker compose -f $(DOC_FILE) down --volumes --remove-orphans --rmi all
 
 fclean: clean
 	docker system prune --force --all
+	sudo rm -rf $(MARIADB_VOL)*
+	sudo rm -rf $(WORDPRESS_VOL)*
 
-re: clean all
+re: fclean all
 
 # .SILENT:
 
