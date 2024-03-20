@@ -6,16 +6,15 @@
 #    By: acarlott <acarlott@student.42lyon.fr>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/03/19 10:33:18 by acarlott          #+#    #+#              #
-#    Updated: 2024/03/19 12:56:40 by acarlott         ###   ########lyon.fr    #
+#    Updated: 2024/03/21 00:29:46 by acarlott         ###   ########lyon.fr    #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = Inception
 
-SRCS = srcs/
-DOC_FILE = $(SRCS)docker-compose.yml
-MARIADB_VOL = ~/data/mariadb/
-WORDPRESS_VOL = ~/data/wordpress/
+DOC_FILE = srcs/docker-compose.yml
+MARIADB_VOL = /home/acarlott/data/mariadb/
+WORDPRESS_VOL = /home/acarlott/data/wordpress/
 
 all: $(NAME)
 
@@ -35,6 +34,6 @@ fclean: clean
 
 re: fclean all
 
-# .SILENT:
+.SILENT:
 
 .PHONY: all down clean fclean re
