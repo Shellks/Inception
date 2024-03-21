@@ -10,30 +10,23 @@
 #                                                                              #
 # **************************************************************************** #
 
-NAME = Inception
-
 DOC_FILE = srcs/docker-compose.yml
-MARIADB_VOL = /home/acarlott/data/mariadb/
-WORDPRESS_VOL = /home/acarlott/data/wordpress/
+DB_PATH = /home/acarlott/data
 
-all: $(NAME)
-
-$(NAME):
+all:
+	mkdir -p  $(DB_PATH)/mariadb $(DB_PATH)/wordpress
 	docker compose -f $(DOC_FILE) up --build -d
 
 down:
 	docker compose -f $(DOC_FILE) down
 
 clean:
-	docker compose -f $(DOC_FILE) down --volumes --remove-orphans --rmi all
+	docker compose -f $(DOC_FILE) down --volumes --rmi all
 
 fclean: clean
 	docker system prune --force --all
-	sudo rm -rf $(MARIADB_VOL)*
-	sudo rm -rf $(WORDPRESS_VOL)*
+	sudo rm -rf $(DB_PATH)
 
 re: fclean all
-
-.SILENT:
 
 .PHONY: all down clean fclean re

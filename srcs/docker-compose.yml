@@ -1,26 +1,37 @@
-version: '3'
+# specifies the version of the Docker Compose file format being used
+version: '3.8'
 
 services:
 
   mariadb:
+  # sets the name of the container running MariaDB
     container_name: mariadb
+  # defines the networks the container will be connected to
     networks:
       - inception
     build:
+      # specifies the directory where the Dockerfile is located
       context: requirements/mariadb
+      # provides values for the build arguments specified in the Dockerfile
       args:
         - MYSQL_DATABASE
         - MYSQL_ROOT_PASSWORD
         - MYSQL_USER
         - MYSQL_PASSWORD
+    # specifies the name of the Docker image to use
     image: mariadb
+    # specifies an environment file from which to load environment variables
     env_file: .env
+    # defines volumes to be mounted
     volumes:
+      # mounts the "mariadb" volume into the container
       - mariadb:/var/lib/mysql
     restart: unless-stopped
+    #  ports to expose from the container to the host
     expose:
       - "3306"
-
+# configuration for the wordpress and nginx follows a similar structure
+# with their own specific settings
   wordpress:
     container_name: wordpress
     networks:
@@ -52,21 +63,31 @@ services:
     volumes:
       - wordpress:/var/www/wordpress
     restart: on-failure
+    # maps port 443 on the host machine to port 443 inside the container
     ports:
       - 443:443
     expose:
       - "443"
 
+# defines named volumes to be used by the services
 volumes:
 
   wordpress:
     name: wordpress
+    # specifies the volume driver to use. In this case,
+    # local driver which is used for volumes managed directly on the Docker host
     driver: local
     driver_opts:
+      # specifies the type of volume
+      # set to none which means that Docker will not manage the volume content
       type: 'none'
+      # option for the volume driver, set to "bind"
+      # means that the volume will be directly bound to a directory on the host filesystem
       o: 'bind'
+      # specifies the path on the host filesystem to which the volume will be bound
       device: '/home/acarlott/data/wordpress'
-
+  # mariadb volume follows a similar structure
+  # with their own specific settings
   mariadb:
     name: mariadb
     driver: local
@@ -75,7 +96,12 @@ volumes:
       o: 'bind'
       device: '/home/acarlott/data/mariadb'
 
+# specifies networks to be used by the services defined in the Docker Compose
 networks:
   inception:
+    # name of the network
     name: inception
+    # specifies the network driver to use
+    # bridge driver is the default driver for Docker networks, it creates an isolated network on the Docker host
+    # allowing containers connected to the network to communicate with each other
     driver: bridge
