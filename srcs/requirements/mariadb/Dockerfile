@@ -12,9 +12,6 @@ ARG	MYSQL_ROOT_PASSWORD
 RUN apt update -y && apt upgrade -y
 RUN apt install mariadb-server -y
 
-#  copies a configuration file into the docker container
-COPY conf/50-server.cnf /etc/mysql/mariadb.conf.d/50-server.cnf
-
 # starts the MariaDB service and executes MariaDB commands to initialize the database
 RUN	service mariadb start \
 	&& mariadb -u root \
