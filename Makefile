@@ -6,7 +6,7 @@
 #    By: acarlott <acarlott@student.42lyon.fr>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/03/19 10:33:18 by acarlott          #+#    #+#              #
-#    Updated: 2024/03/21 00:29:46 by acarlott         ###   ########lyon.fr    #
+#    Updated: 2024/03/21 22:01:22 by acarlott         ###   ########lyon.fr    #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@ DOC_FILE = srcs/docker-compose.yml
 DB_PATH = /home/acarlott/data
 
 all:
-	mkdir -p  $(DB_PATH)/mariadb $(DB_PATH)/wordpress
+	# mkdir -p  $(DB_PATH)/mariadb $(DB_PATH)/wordpress
 	docker compose -f $(DOC_FILE) up --build -d
 
 down:
@@ -25,7 +25,8 @@ clean:
 
 fclean: clean
 	docker system prune --force --all
-	sudo rm -rf $(DB_PATH)
+	sudo rm -rf $(DB_PATH)/mariadb/*
+	sudo rm -rf $(DB_PATH)/wordpress/*
 
 re: fclean all
 
